@@ -8,10 +8,13 @@ import os
 from google.oauth2.credentials import Credentials
 from llama_cpp import Llama
 from colorama import Fore
+from dotenv import load_dotenv
+from dotenv import load_dotenv
 
+load_dotenv()
 
-OPENAI_API_KEY = "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"
-LOCAL_LLAMA_LOCATION = r"X:\Models\tinker-models\Llama-2-7B-Chat-GGUF\llama-2-7b-chat.Q8_0.gguf"
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+LOCAL_LLAMA_LOCATION = os.getenv("LOCAL_LLAMA_LOCATION")
 
 # If modifying these SCOPES, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/gmail.modify']
