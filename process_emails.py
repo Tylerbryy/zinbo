@@ -9,7 +9,6 @@ from google.oauth2.credentials import Credentials
 from llama_cpp import Llama
 from colorama import Fore
 from dotenv import load_dotenv
-from dotenv import load_dotenv
 
 load_dotenv()
 
