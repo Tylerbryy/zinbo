@@ -40,11 +40,10 @@ class OpenAIClient(LanguageModelClient):
 
 # Subclass for Llama
 class LlamaClient(LanguageModelClient):
-    def __init__(self, model_path: str, n_gpu_layers: int, n_ctx: int, n_batch: int, chat_format: str, verbose: bool):
+    def __init__(self, model_path: str, n_ctx: int, n_batch: int, chat_format: str, verbose: bool):
         super().__init__(model_name="Llama 2 7B")
         self.client = Llama(
             model_path=model_path,
-            n_gpu_layers=n_gpu_layers,
             n_ctx=n_ctx,
             n_batch=n_batch,
             chat_format=chat_format,
@@ -265,7 +264,6 @@ def main():
     elif client_type == 'llama':
         client = LlamaClient(
             model_path=LOCAL_LLAMA_LOCATION, #your local llama location
-            n_gpu_layers=60,
             n_ctx=3584,
             n_batch=521,
             chat_format="llama-2",
