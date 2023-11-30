@@ -1,7 +1,8 @@
+![Inbox Cleaner Logo](public/logo2.png)
+
 # Inbox Cleaner
 
 This script helps manage a Gmail inbox by filtering out promotional emails using GPT-3, GPT-4, or Llama 2 7B.
-![Inbox Cleaner Logo](public/logo2.png)
 
 ## Prerequisites
 
