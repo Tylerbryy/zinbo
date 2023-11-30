@@ -1,8 +1,17 @@
-![Inbox Cleaner Logo](public/logo2.png)
+<div alt style="text-align: center; transform: scale(.5);">
+	<picture>
+		<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/tylerbryy/zinbo/main/public/logo2.png" />
+		<img alt="tldraw" src="https://raw.githubusercontent.com/tylerbryy/zinbo/main/public/logo2.png" />
+	</picture>
+</div>
 
-# Inbox Cleaner
+# Zinbo
 
-This script helps manage a Gmail inbox by filtering out promotional emails using GPT-3, GPT-4, or Llama 2 7B.
+Welcome to the Zinbo project.
+
+## What is Zinbo?
+
+Zinbo is a powerful tool designed to declutter your Gmail inbox by identifying and filtering out unwanted promotional emails. It leverages advanced language models such as GPT-3, GPT-4, or Llama 2 7B to intelligently sort through your messages.
 
 ## Prerequisites
 
