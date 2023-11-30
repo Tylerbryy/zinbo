@@ -23,10 +23,30 @@ class OpenAIClient(LanguageModelClient):
             temperature=0.0,
         )
     
+class HermesClient(LanguageModelClient):
+    def __init__(self, model_path: str, n_ctx: int, n_batch: int, chat_format: str, verbose: bool):
+        super().__init__(model_name="openhermes-2.5-mistral-7b")
+        hermes_params = {
+            "model_path": model_path,
+            "n_ctx": n_ctx,
+            "n_batch": n_batch,
+            "chat_format": chat_format,
+            "verbose": verbose
+        }
+        
+        operating_system = os.getenv("OPERATING_SYSTEM")
+        if operating_system == "Windows":
+            hermes_params["n_gpu_layers"] = 50
 
+        self.client = Llama(**hermes_params)
+
+    def create_chat_completion(self, messages: list, max_tokens: int):
+        response = self.client.create_chat_completion(messages=messages, max_tokens=max_tokens)
+        return response
+    
 class LlamaClient(LanguageModelClient):
     def __init__(self, model_path: str, n_ctx: int, n_batch: int, chat_format: str, verbose: bool):
-        super().__init__(model_name="Llama 2 7B")
+        super().__init__(model_name="llama-2-7B")
         llama_params = {
             "model_path": model_path,
             "n_ctx": n_ctx,

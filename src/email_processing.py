@@ -27,17 +27,23 @@ def process_email(gmail: Resource, message_info: Dict[str, Union[str, List[str]]
     return 0
 
 def report_statistics(total_unread_emails: int, total_pages_fetched: int, total_marked_as_read: int, model_used: str) -> None:
-    print("\n")  
-    table_header = f"{Fore.LIGHTCYAN_EX}{'Statistics':<35}{'Value':<15}{Fore.RESET}"
-    table_divider = f"{Fore.LIGHTCYAN_EX}{'-' * 50}{Fore.RESET}"
-    table_rows = [
-        f"{Fore.LIGHTYELLOW_EX}{'Total unread emails fetched':<35}{total_unread_emails:<15}{Fore.RESET}",
-        f"{Fore.LIGHTYELLOW_EX}{'Total pages fetched':<35}{total_pages_fetched:<15}{Fore.RESET}",
-        f"{Fore.LIGHTYELLOW_EX}{'Total emails marked as read':<35}{total_marked_as_read:<15}{Fore.RESET}",
-        f"{Fore.LIGHTYELLOW_EX}{'Final number of unread emails':<35}{total_unread_emails - total_marked_as_read:<15}{Fore.RESET}",
-        f"{Fore.LIGHTYELLOW_EX}{'Language model used':<35}{model_used:<15}{Fore.RESET}"
-    ]
-    print(table_header)
-    print(table_divider)
-    for row in table_rows:
-        print(row)
+    print("\n")
+    header = "Statistics Report"
+    print(f"{Fore.LIGHTCYAN_EX}{header.center(50)}{Fore.RESET}")
+    print(f"{Fore.LIGHTCYAN_EX}{'-' * 50}{Fore.RESET}")
+
+    stats = {
+        'Total unread emails fetched': total_unread_emails,
+        'Total pages fetched': total_pages_fetched,
+        'Total emails marked as read': total_marked_as_read,
+        'Final number of unread emails': total_unread_emails - total_marked_as_read,
+        'Language model used': model_used
+    }
+
+    for key, value in stats.items():
+        print(f"{Fore.LIGHTYELLOW_EX}{key:<35}{Fore.RESET}{value:<15}")
+
+    print(f"{Fore.LIGHTCYAN_EX}{'-' * 50}{Fore.RESET}")
+    footer = "End of Report"
+    print(f"{Fore.LIGHTCYAN_EX}{footer.center(50)}{Fore.RESET}")
+    print("\n")

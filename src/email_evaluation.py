@@ -1,6 +1,6 @@
 from typing import Dict, List, Union
 from openai import OpenAI
-from src.language_model_client import OpenAIClient, LlamaClient
+from src.language_model_client import OpenAIClient, LlamaClient, HermesClient
 
 
 
@@ -81,3 +81,5 @@ def evaluate_email(email_data: Dict[str, Union[str, List[str]]], user_first_name
         return completion.choices[0].message.content.strip() == "True"
     elif isinstance(client, LlamaClient):
         return completion['choices'][0]['message']['content'].strip() == "True"
+    elif isinstance(client, HermesClient):
+        return completion['choices'][0]['message']['content'].strip() == "True"    
