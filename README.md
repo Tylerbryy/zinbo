@@ -1,6 +1,7 @@
 # Inbox Cleaner
 
 This script helps manage a Gmail inbox by filtering out promotional emails using GPT-3, GPT-4, or Llama 2 7B.
+![Inbox Cleaner Logo](public/logo.png)
 
 ## Prerequisites
 
@@ -48,7 +49,7 @@ This script helps manage a Gmail inbox by filtering out promotional emails using
 Run the script:
 
 ```
-python process_emails.py
+run.py
 ```
 
 When prompted, enter your first and last name. The script will then start processing your unread emails.
