@@ -11,7 +11,7 @@ Welcome to the Zinbo project.
 
 ## What is Zinbo?
 
-Zinbo is a powerful tool designed to declutter your Gmail inbox by identifying and filtering out unwanted promotional emails. It leverages advanced language models such as GPT-3, GPT-4, or Llama 2 7B to intelligently sort through your messages.
+Zinbo is a powerful tool designed to declutter your Gmail inbox by identifying and filtering out unwanted promotional emails. It leverages advanced language models such as GPT-3, GPT-4, [Llama 2 7B](https://huggingface.co/TheBloke/Llama-2-7B-Chat-GGUF), and [OpenHermes 2.5 Mistral 7B](https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF) to intelligently sort through your messages.
 
 ## Prerequisites
 
@@ -20,6 +20,7 @@ Zinbo is a powerful tool designed to declutter your Gmail inbox by identifying a
 - Google Cloud account with Gmail API enabled
 - OpenAI API key
 - Llama model (if using Llama)
+- OpenHermes model (if using OpenHermes)
 
 ## Setup
 
@@ -42,24 +43,27 @@ Zinbo is a powerful tool designed to declutter your Gmail inbox by identifying a
    - Download the JSON file and rename it to `credentials.json`.
    - Put `credentials.json` in the `inbox_cleaner` directory.
 
-4. Set up your OpenAI API key and Llama model path (if using Llama) by creating a `.env` file in the `inbox_cleaner` directory with the following content:
+4. Set up your environment variables by copying the `.env.example` file to `.env` and filling in the values:
 
+   For macOS/Linux:
+   ```
+   cp .env.example .env
+   ```
 
+   For Windows:
+   ```
+   copy .env.example .env
+   ```
+   - Edit the `.env` file with your actual values.
    - Follow the instructions [here](https://platform.openai.com/api-keys) to get your OpenAI API key.
-   - Set the key as an environment variable:
-
-     ```
-      OPENAI_API_KEY=your_openai_api_key
-      LOCAL_LLAMA_LOCATION=path_to_your_local_llama_model
-     ```
-   Replace `your_openai_api_key` with your actual OpenAI API key and `path_to_your_local_llama_model` with the file path to your Llama model.
+   - Set the key as an environment variable in the `.env` file along with the paths to your Llama and OpenHermes models.
 
 ## Usage
 
 Run the script:
 
 ```
-run.py
+python run.py
 ```
 
-When prompted, enter your first and last name. The script will then start processing your unread emails.
+When prompted, choose the language model client you want to use. The script will then start processing your unread emails.
