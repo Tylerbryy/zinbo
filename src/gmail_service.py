@@ -7,7 +7,7 @@ import os
 from google.oauth2.credentials import Credentials
 
 
-SCOPES = ['https://www.googleapis.com/auth/gmail.modify']
+SCOPES = ['https://mail.google.com/']
 
 def get_user_email(gmail: Resource) -> str:
     profile = gmail.users().getProfile(userId='me').execute()

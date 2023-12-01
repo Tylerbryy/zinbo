@@ -65,6 +65,28 @@ def choose_language_model_client():
     client_type, model_path_or_key = clients[choice]
     return client_type, model_path_or_key
 
+def get_user_action() -> str:
+    """
+    Prompt the user for the action to take on promotional emails.
+    Returns:
+        str: The action to be taken ('read' or 'delete').
+    """
+    actions = {
+        '1': 'read',
+        '2': 'delete'
+    }
+    print("Choose the action to take on promotional emails:")
+    print("1: Mark emails as read")
+    print("2: Delete emails")
+
+    choice = input("Enter the number of your choice: ").strip()
+
+    while choice not in actions:
+        print("Invalid choice. Please try again.")
+        choice = input("Enter the number of your choice: ").strip()
+
+    return actions[choice]
+
 def main():
     try:
         gmail = get_gmail_service()
@@ -90,7 +112,10 @@ def main():
             processed_emails = {}
             print("No processed emails file found, starting fresh.")
 
+        
         client_type, model_path_or_key = choose_language_model_client()
+        action = get_user_action()  
+
         client_kwargs = {
             'api_key': model_path_or_key if client_type == 'gpt-4-1106-preview' else None,
             'model_path': model_path_or_key if client_type in ['llama-2-7B', 'openhermes-2.5-mistral-7b'] else None
@@ -98,6 +123,7 @@ def main():
         client = LanguageModelClientFactory.get_client(client_type, **client_kwargs)
 
         user_first_name, user_last_name = get_user_name()
+        
 
         page_token: Optional[str] = None
 
@@ -128,7 +154,7 @@ def main():
                 except Exception as e:
                     print(f"Failed to write to file: {e}")
 
-                total_marked_as_read += process_email(gmail, message_info, email_data_parsed, user_first_name, user_last_name, client) 
+                total_marked_as_read += process_email(gmail, message_info, email_data_parsed, user_first_name, user_last_name, client, action) 
 
             if not page_token:
                 break

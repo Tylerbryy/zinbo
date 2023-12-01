@@ -7,21 +7,34 @@ from src.email_evaluation import evaluate_email
 
 
 
-def process_email(gmail: Resource, message_info: Dict[str, Union[str, List[str]]], email_data_parsed: Dict[str, Union[str, List[str]]], user_first_name: str, user_last_name: str, client: OpenAI) -> int:
+def process_email(gmail: Resource, message_info: Dict[str, Union[str, List[str]]], email_data_parsed: Dict[str, Union[str, List[str]]], user_first_name: str, user_last_name: str, client: OpenAI, action: str) -> int:
     # Evaluate email
     if evaluate_email(email_data_parsed, user_first_name, user_last_name, client):
-        print(Fore.LIGHTYELLOW_EX + "Email is not worth the time, marking as read" + Fore.RESET)
-        # Remove UNREAD label
-        try:
-            gmail.users().messages().modify(
-                userId='me',
-                id=message_info['id'],
-                body={'removeLabelIds': ['UNREAD']}
-            ).execute()
-            print(Fore.LIGHTGREEN_EX + "Email marked as read successfully" + Fore.RESET)
-            return 1
-        except Exception as e:
-            print(Fore.LIGHTRED_EX + f"Failed to mark email as read: {e}" + Fore.RESET)
+        if action == 'delete':
+            print(Fore.LIGHTYELLOW_EX + "Email is not worth the time, deleting" + Fore.RESET)
+            # Delete email
+            try:
+                gmail.users().messages().delete(
+                    userId='me',
+                    id=message_info['id']
+                ).execute()
+                print(Fore.LIGHTGREEN_EX + "Email deleted successfully" + Fore.RESET)
+                return 1
+            except Exception as e:
+                print(Fore.LIGHTRED_EX + f"Failed to delete email: {e}" + Fore.RESET)
+        elif action == 'read':
+            print(Fore.LIGHTYELLOW_EX + "Email is not worth the time, marking as read" + Fore.RESET)
+            # Remove UNREAD label
+            try:
+                gmail.users().messages().modify(
+                    userId='me',
+                    id=message_info['id'],
+                    body={'removeLabelIds': ['UNREAD']}
+                ).execute()
+                print(Fore.LIGHTGREEN_EX + "Email marked as read successfully" + Fore.RESET)
+                return 1
+            except Exception as e:
+                print(Fore.LIGHTRED_EX + f"Failed to mark email as read: {e}" + Fore.RESET)
     else:
         print(Fore.LIGHTBLUE_EX + "Email is worth the time, leaving as unread" + Fore.RESET)
     return 0
