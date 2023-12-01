@@ -1,10 +1,12 @@
+# run.py
 from typing import Optional
 import os
+import json
 
 from dotenv import load_dotenv
 from src.language_model_client import OpenAIClient, LlamaClient, HermesClient
 
-from src.gmail_service import get_gmail_service, fetch_emails, parse_email_data
+from src.gmail_service import get_gmail_service, fetch_emails, parse_email_data, get_user_email
 from src.email_processing import process_email, report_statistics
 
 load_dotenv()
@@ -64,43 +66,78 @@ def choose_language_model_client():
     return client_type, model_path_or_key
 
 def main():
-    gmail = get_gmail_service()
+    try:
+        gmail = get_gmail_service()
+        user_email = get_user_email(gmail)
+        
+        if not user_email:
+            raise Exception("Failed to retrieve user email address.")
 
-    # Ask the user which language model client to use
-    client_type, model_path_or_key = choose_language_model_client()
-    client_kwargs = {
-        'api_key': model_path_or_key if client_type == 'gpt-4-1106-preview' else None,
-        'model_path': model_path_or_key if client_type in ['llama-2-7B', 'openhermes-2.5-mistral-7b'] else None
-    }
-    client = LanguageModelClientFactory.get_client(client_type, **client_kwargs)
+        # Define the folder name
+        folder_name = "cache"
+        # Create the folder if it doesn't exist
+        if not os.path.exists(folder_name):
+            os.makedirs(folder_name)
+        
+        # Update the file path to include the cache folder
+        processed_emails_file = os.path.join(folder_name, f"processed_emails_{user_email.replace('@', '_at_')}.json")
+        
+        if os.path.exists(processed_emails_file):
+            with open(processed_emails_file, 'r') as file:
+                processed_emails = json.load(file)
+            
+        else:
+            processed_emails = {}
+            print("No processed emails file found, starting fresh.")
 
+        client_type, model_path_or_key = choose_language_model_client()
+        client_kwargs = {
+            'api_key': model_path_or_key if client_type == 'gpt-4-1106-preview' else None,
+            'model_path': model_path_or_key if client_type in ['llama-2-7B', 'openhermes-2.5-mistral-7b'] else None
+        }
+        client = LanguageModelClientFactory.get_client(client_type, **client_kwargs)
 
-    user_first_name, user_last_name = get_user_name()
+        user_first_name, user_last_name = get_user_name()
 
-    page_token: Optional[str] = None
+        page_token: Optional[str] = None
 
-    total_unread_emails = 0
-    total_pages_fetched = 0
-    total_marked_as_read = 0
+        total_unread_emails = 0
+        total_pages_fetched = 0
+        total_marked_as_read = 0
 
-    while True:  # Continue looping until no more pages of messages
-        # Fetch unread emails
-        messages, page_token = fetch_emails(gmail, page_token)
-        total_pages_fetched += 1
-        print(f"Fetched page {total_pages_fetched} of emails")
+        while True:
+            messages, page_token = fetch_emails(gmail, page_token)
+            total_pages_fetched += 1
+            print(f"Fetched page {total_pages_fetched} of emails")
 
-        total_unread_emails += len(messages)
-        for message_info in messages:  # TODO process emails on a single page in parallel
-            # Fetch and parse email data
-            email_data_parsed = parse_email_data(gmail, message_info)
+            total_unread_emails += len(messages)
 
-            # Process email
-            total_marked_as_read += process_email(gmail, message_info, email_data_parsed, user_first_name, user_last_name, client)
+            for message_info in messages:
+                email_id = message_info['id']
+                if email_id in processed_emails:
+                    print(f"Skipping already looked at email with ID: {email_id}")
+                    continue
 
-        if not page_token:
-            break  # Exit the loop if there are no more pages of messages
+                email_data_parsed = parse_email_data(gmail, message_info)
+                
+                # Mark the email as processed regardless of the processing result
+                processed_emails[email_id] = True
+                try:
+                    with open(processed_emails_file, 'w') as file:
+                        json.dump(processed_emails, file)
+                except Exception as e:
+                    print(f"Failed to write to file: {e}")
 
-    report_statistics(total_unread_emails, total_pages_fetched, total_marked_as_read, client.model_name)
+                total_marked_as_read += process_email(gmail, message_info, email_data_parsed, user_first_name, user_last_name, client) 
+
+            if not page_token:
+                break
+
+        report_statistics(total_unread_emails, total_pages_fetched, total_marked_as_read, client.model_name)
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        print("Current state of processed emails at error:", processed_emails)
 
 if __name__ == "__main__":
     main()

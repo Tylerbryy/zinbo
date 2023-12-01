@@ -9,6 +9,9 @@ from google.oauth2.credentials import Credentials
 
 SCOPES = ['https://www.googleapis.com/auth/gmail.modify']
 
+def get_user_email(gmail: Resource) -> str:
+    profile = gmail.users().getProfile(userId='me').execute()
+    return profile.get('emailAddress', '')
 
 def fetch_emails(gmail: Resource, page_token: Optional[str]) -> Tuple[List[Dict[str, Union[str, List[str]]]], Optional[str]]:
     try:
