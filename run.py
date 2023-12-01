@@ -2,12 +2,14 @@
 from typing import Optional
 import os
 import json
+from colorama import Fore
 
 from dotenv import load_dotenv
 from src.language_model_client import OpenAIClient, LlamaClient, HermesClient
 
 from src.gmail_service import get_gmail_service, fetch_emails, parse_email_data, get_user_email
 from src.email_processing import process_email, report_statistics
+from src.settings_config import save_user_settings, load_user_settings, ask_to_override_settings
 
 load_dotenv()
 
@@ -16,8 +18,9 @@ LOCAL_LLAMA_LOCATION = os.getenv("LOCAL_LLAMA_LOCATION")
 LOCAL_OPEN_HERMES_LOCATION = os.getenv("LOCAL_OPEN_HERMES_LOCATION")
 
 def get_user_name():
-    user_first_name = input("Enter your first name: ")
-    user_last_name = input("Enter your last name: ")
+
+    user_first_name = input(Fore.LIGHTYELLOW_EX + "Enter your first name: " + Fore.RESET)
+    user_last_name = input(Fore.LIGHTYELLOW_EX + "Enter your last name: " + Fore.RESET)
     return user_first_name, user_last_name
 
 class LanguageModelClientFactory:
@@ -45,22 +48,23 @@ class LanguageModelClientFactory:
             raise ValueError(f"Invalid language model type selected: {client_type}")
         
 def choose_language_model_client():
+    os.system('clear' if os.name == 'posix' else 'cls')
     clients = {
         '1': ('gpt-4-1106-preview', OPENAI_API_KEY),
         '2': ('llama-2-7B', LOCAL_LLAMA_LOCATION),
         '3': ('openhermes-2.5-mistral-7b', LOCAL_OPEN_HERMES_LOCATION)
     }
-
-    print("Please choose the language model client you want to use:")
-    print("1: gpt-4-1106-preview")
-    print("2: llama-2-7B")
-    print("3: openhermes-2.5-mistral-7b")
+    print("---------------------")
+    print(Fore.LIGHTBLUE_EX + "Please choose the language model client you want to use:" + Fore.RESET)
+    print(Fore.LIGHTMAGENTA_EX + "1: gpt-4-1106-preview" + Fore.RESET)
+    print(Fore.LIGHTMAGENTA_EX + "2: llama-2-7B" + Fore.RESET)
+    print(Fore.LIGHTMAGENTA_EX + "3: openhermes-2.5-mistral-7b" + Fore.RESET)
     
-    choice = input("Enter the number of your choice: ").strip()
+    choice = input(Fore.LIGHTYELLOW_EX + "Enter the number of your choice: " + Fore.RESET).strip()
 
     while choice not in clients:
-        print("Invalid choice. Please try again.")
-        choice = input("Enter the number of your choice: ").strip()
+        print(Fore.LIGHTRED_EX + "Invalid choice. Please try again." + Fore.RESET)
+        choice = input(Fore.LIGHTYELLOW_EX + "Enter the number of your choice: " + Fore.RESET).strip()
 
     client_type, model_path_or_key = clients[choice]
     return client_type, model_path_or_key
@@ -75,15 +79,18 @@ def get_user_action() -> str:
         '1': 'read',
         '2': 'delete'
     }
-    print("Choose the action to take on promotional emails:")
-    print("1: Mark emails as read")
-    print("2: Delete emails")
+    print("---------------------")
+    print("\n")
+    print("---------------------")
+    print(Fore.LIGHTBLUE_EX + "Choose the action to take on promotional emails:" + Fore.RESET)
+    print(Fore.LIGHTMAGENTA_EX + "1: Mark emails as read" + Fore.RESET)
+    print(Fore.LIGHTMAGENTA_EX + "2: Delete emails" + Fore.RESET)
 
-    choice = input("Enter the number of your choice: ").strip()
+    choice = input(Fore.LIGHTYELLOW_EX + "Enter the number of your choice: " + Fore.RESET).strip()
 
     while choice not in actions:
-        print("Invalid choice. Please try again.")
-        choice = input("Enter the number of your choice: ").strip()
+        print(Fore.LIGHTRED_EX + "Invalid choice. Please try again." + Fore.RESET)
+        choice = input(Fore.LIGHTYELLOW_EX + "Enter the number of your choice: " + Fore.RESET).strip()
 
     return actions[choice]
 
@@ -94,6 +101,32 @@ def main():
         
         if not user_email:
             raise Exception("Failed to retrieve user email address.")
+        
+        
+        # Load user settings
+        last_settings = load_user_settings()
+        settings_loaded = False
+        if last_settings:
+            use_last_settings = ask_to_override_settings(last_settings)
+            if use_last_settings:
+                client_type, model_path_or_key = last_settings['client_type'], last_settings['model_path_or_key']
+                action = last_settings['action']
+                user_first_name = last_settings['user_first_name']
+                user_last_name = last_settings['user_last_name']
+                settings_loaded = True
+
+        if not settings_loaded:
+            client_type, model_path_or_key = choose_language_model_client()
+            action = get_user_action()
+            user_first_name, user_last_name = get_user_name()
+            # Save the user settings for next time
+            save_user_settings({
+                'client_type': client_type,
+                'model_path_or_key': model_path_or_key,
+                'action': action,
+                'user_first_name': user_first_name,
+                'user_last_name': user_last_name
+            })
 
         # Define the folder name
         folder_name = "cache"
@@ -113,8 +146,7 @@ def main():
             print("No processed emails file found, starting fresh.")
 
         
-        client_type, model_path_or_key = choose_language_model_client()
-        action = get_user_action()  
+         
 
         client_kwargs = {
             'api_key': model_path_or_key if client_type == 'gpt-4-1106-preview' else None,
@@ -122,7 +154,6 @@ def main():
         }
         client = LanguageModelClientFactory.get_client(client_type, **client_kwargs)
 
-        user_first_name, user_last_name = get_user_name()
         
 
         page_token: Optional[str] = None
