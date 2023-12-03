@@ -27,8 +27,8 @@ Zinbo is a powerful tool designed to declutter your Gmail inbox by identifying a
 1. Clone this repository:
 
    ```
-   git clone https://github.com/Tylerbryy/email_inbox_cleaner.git
-   cd inbox_cleaner
+   git clone https://github.com/Tylerbryy/zinbo.git
+   cd zinbo
    ```
 
 2. Install the required Python packages:
@@ -41,7 +41,7 @@ Zinbo is a powerful tool designed to declutter your Gmail inbox by identifying a
 
    - Follow the instructions [here](https://developers.google.com/workspace/guides/create-credentials) to create a new OAuth 2.0 Client ID.
    - Download the JSON file and rename it to `credentials.json`.
-   - Put `credentials.json` in the `inbox_cleaner` directory.
+   - Put `credentials.json` in the `zinbo` directory.
 
 4. Set up your environment variables by copying the `.env.example` file to `.env` and filling in the values:
 
