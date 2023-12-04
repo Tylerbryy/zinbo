@@ -27,8 +27,8 @@ Zinbo is a powerful tool designed to declutter your Gmail inbox by identifying a
 1. Clone this repository:
 
    ```
-   git clone https://github.com/Tylerbryy/email_inbox_cleaner.git
-   cd inbox_cleaner
+   git clone https://github.com/Tylerbryy/zinbo.git
+   cd zinbo
    ```
 
 2. Install the required Python packages:
@@ -41,7 +41,7 @@ Zinbo is a powerful tool designed to declutter your Gmail inbox by identifying a
 
    - Follow the instructions [here](https://developers.google.com/workspace/guides/create-credentials) to create a new OAuth 2.0 Client ID.
    - Download the JSON file and rename it to `credentials.json`.
-   - Put `credentials.json` in the `inbox_cleaner` directory.
+   - Put `credentials.json` in the `zinbo` directory.
 
 4. Set up your environment variables by copying the `.env.example` file to `.env` and filling in the values:
 
@@ -58,6 +58,51 @@ Zinbo is a powerful tool designed to declutter your Gmail inbox by identifying a
    - Follow the instructions [here](https://platform.openai.com/api-keys) to get your OpenAI API key.
    - Set the key as an environment variable in the `.env` file along with the paths to your Llama and OpenHermes models.
 
+## GPU Acceleration
+
+`llama-cpp-python` supports various hardware acceleration backends. To enable GPU acceleration, set the `CMAKE_ARGS` environment variable before installing with `pip`. Below are instructions for different acceleration options:
+
+#### OpenBLAS
+For OpenBLAS support:
+```bash
+CMAKE_ARGS="-DLLAMA_BLAS=ON -DLLAMA_BLAS_VENDOR=OpenBLAS" 
+```
+```
+pip install llama-cpp-python  --upgrade --force-reinstall --no-cache-dir
+```
+#### cuBLAS (NVIDIA GPUs)
+For cuBLAS support, ensure CUDA is installed and configured:
+```bash
+$env:CMAKE_ARGS="-DLLAMA_BLAS=ON -DLLAMA_BLAS_VENDOR=cuBLAS"
+```
+```
+pip install llama-cpp-python  --upgrade --force-reinstall --no-cache-dir
+```
+#### Metal (MPS) for macOS
+For Metal support on macOS:
+```bash
+CMAKE_ARGS="-DLLAMA_METAL=on"
+```
+```
+pip install llama-cpp-python  --upgrade --force-reinstall --no-cache-dir
+```
+#### CLBlast
+For CLBlast support:
+```
+CMAKE_ARGS="-DLLAMA_CLBLAST=on" 
+```
+```
+pip install llama-cpp-python  --upgrade --force-reinstall --no-cache-dir
+```
+
+#### hipBLAS (AMD GPUs)
+For hipBLAS / ROCm support on AMD GPUs:
+```
+CMAKE_ARGS="-DLLAMA_HIPBLAS=on"
+```
+```
+pip install llama-cpp-python  --upgrade --force-reinstall --no-cache-dir
+```
 ## Usage
 
 Run the script:
