@@ -39,8 +39,8 @@ class LanguageModelClientFactory:
         elif client_type == 'openhermes-2.5-mistral-7b':
             return HermesClient(
                 model_path=kwargs.get("model_path", LOCAL_OPEN_HERMES_LOCATION),
-                n_ctx=kwargs.get("n_ctx", 2048),
-                n_batch=kwargs.get("n_batch", 1),
+                n_ctx=kwargs.get("n_ctx", 3584),
+                n_batch=kwargs.get("n_batch", 521),
                 chat_format=kwargs.get("chat_format", "llama-2"),
                 verbose=kwargs.get("verbose", False)
             )
