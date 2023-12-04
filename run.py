@@ -18,7 +18,6 @@ LOCAL_LLAMA_LOCATION = os.getenv("LOCAL_LLAMA_LOCATION")
 LOCAL_OPEN_HERMES_LOCATION = os.getenv("LOCAL_OPEN_HERMES_LOCATION")
 
 def get_user_name():
-
     user_first_name = input(Fore.LIGHTYELLOW_EX + "Enter your first name: " + Fore.RESET)
     user_last_name = input(Fore.LIGHTYELLOW_EX + "Enter your last name: " + Fore.RESET)
     return user_first_name, user_last_name
@@ -162,6 +161,13 @@ def main():
         total_pages_fetched = 0
         total_marked_as_read = 0
 
+        # Define the directory name where the JSON file will be stored
+        email_details_folder = "emails_recovery"
+
+        # Create the directory if it doesn't exist
+        if not os.path.exists(email_details_folder):
+            os.makedirs(email_details_folder)
+
         while True:
             messages, page_token = fetch_emails(gmail, page_token)
             total_pages_fetched += 1
@@ -185,7 +191,11 @@ def main():
                 except Exception as e:
                     print(f"Failed to write to file: {e}")
 
-                total_marked_as_read += process_email(gmail, message_info, email_data_parsed, user_first_name, user_last_name, client, action) 
+
+
+                # Update the file path to include the new directory
+                processed_emails_file_path = os.path.join(email_details_folder, f"processed_emails_details_{user_email.replace('@', '_at_')}.json")
+                total_marked_as_read += process_email(gmail, message_info, email_data_parsed, user_first_name, user_last_name, client, action, processed_emails_file_path)
 
             if not page_token:
                 break
