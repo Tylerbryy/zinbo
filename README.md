@@ -31,19 +31,13 @@ Zinbo is a powerful tool designed to declutter your Gmail inbox by identifying a
    cd zinbo
    ```
 
-2. Install the required Python packages:
-
-   ```
-   pip install -r requirements.txt
-   ```
-
-3. Set up your Google API credentials:
+2. Set up your Google API credentials:
 
    - Follow the instructions [here](https://developers.google.com/workspace/guides/create-credentials) to create a new OAuth 2.0 Client ID.
    - Download the JSON file and rename it to `credentials.json`.
    - Put `credentials.json` in the `zinbo` directory.
 
-4. Set up your environment variables by copying the `.env.example` file to `.env` and filling in the values:
+3. Set up your environment variables by copying the `.env.example` file to `.env` and  just set your `OPENAI` key. The `setup.py` will fill out the rest. I left them as a option in case you want to modify the locations:
 
    For macOS/Linux:
    ```
@@ -56,7 +50,19 @@ Zinbo is a powerful tool designed to declutter your Gmail inbox by identifying a
    ```
    - Edit the `.env` file with your actual values.
    - Follow the instructions [here](https://platform.openai.com/api-keys) to get your OpenAI API key.
-   - Set the key as an environment variable in the `.env` file along with the paths to your Llama and OpenHermes models.
+
+4. Run
+
+      ```bash
+         python setup.py
+      ```
+5. You're done! Run the program!
+
+      ```bash
+         python run.py
+      ```
+
+
 
 ## GPU Acceleration
 
