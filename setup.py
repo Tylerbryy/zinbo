@@ -1,6 +1,5 @@
 import subprocess
 import os
-from huggingface_hub import hf_hub_download
 
 
 # Define the path to your .env file
@@ -18,6 +17,8 @@ if os.name == 'nt':
 # Function to install dependencies from requirements.txt
 def install_requirements():
     subprocess.check_call(["pip", "install", "-r", "requirements.txt"])
+
+from huggingface_hub import hf_hub_download
 # Function to update the .env file with the new model path
 def update_env_file(key, new_value):
     # Check if the .env file exists
