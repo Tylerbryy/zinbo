@@ -17,6 +17,8 @@ if os.name == 'nt':
 # Function to install dependencies from requirements.txt
 def install_requirements():
     subprocess.check_call(["pip", "install", "-r", "requirements.txt"])
+install_requirements()
+
 
 from huggingface_hub import hf_hub_download
 # Function to update the .env file with the new model path
@@ -73,5 +75,5 @@ def download_models():
         update_env_file(env_key, model_path)
 
 # Post-installation: Install requirements and download models
-install_requirements()
+
 download_models()
