@@ -82,4 +82,4 @@ def evaluate_email(email_data: Dict[str, Union[str, List[str]]], user_first_name
     elif isinstance(client, LlamaClient):
         return completion['choices'][0]['message']['content'].strip() == "True"
     elif isinstance(client, HermesClient):
-        return completion['choices'][0]['message']['content'].strip() == "True"    
+        return completion['choices'][0]['message']['content'].replace('\n', '').strip() == "True"

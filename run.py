@@ -40,7 +40,7 @@ class LanguageModelClientFactory:
                 model_path=kwargs.get("model_path", LOCAL_OPEN_HERMES_LOCATION),
                 n_ctx=kwargs.get("n_ctx", 3584),
                 n_batch=kwargs.get("n_batch", 521),
-                chat_format=kwargs.get("chat_format", "llama-2"),
+                chat_format=kwargs.get("chat_format", "chatml"),
                 verbose=kwargs.get("verbose", False)
             )
         else:

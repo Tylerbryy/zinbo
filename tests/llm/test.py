@@ -3,8 +3,8 @@ from llama_cpp import Llama
 from colorama import Fore, Style
 
 # Initialize the Llama model with the specified parameters
-llm = Llama(model_path=r"e:\ai\llm_models\llama 2\llama-2-7b-chat.Q5_K_S.gguf", 
-            chat_format="llama-2", n_gpu_layers=50, n_ctx=3584, n_batch=512)
+llm = Llama(model_path=r"E:\ai\llm_models\open-hermes-2.5-mistral\openhermes-2.5-mistral-7b.Q5_K_S.gguf", 
+            chat_format="chatml", n_gpu_layers=50, n_ctx=3584, n_batch=512)
 
 # Initialize the conversation history with the system's role
 conversation_history = [{"role": "system", "content": "You are a helpful assistant named Nova."}]
@@ -19,8 +19,8 @@ while True:
     response = llm.create_chat_completion(messages=conversation_history)
     
     # Extract the message content from the response
-    message_content = response["choices"][0]["message"]["content"]
-    message_content = message_content.replace("[INST]", "").replace("<<SYS>>", "").replace("</SYS>", "").strip()
+    message_content = response["choices"][0]["message"]["content"].replace("[INST]", "").replace("<<SYS>>", "").replace("</SYS>", "").replace("<</A>", "").replace("<@A>", "").replace("[/INST]", "").strip()
+    
     
     # Print the model's response
     print(Fore.CYAN + "Nova: " + Style.RESET_ALL + message_content)
