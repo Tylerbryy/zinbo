@@ -42,7 +42,6 @@ class HermesClient(LanguageModelClient):
 
     def create_chat_completion(self, messages: list, max_tokens: int):
         response = self.client.create_chat_completion(messages=messages, max_tokens=3, temperature=0.0)
-        print(response)
         return response
     
 class LlamaClient(LanguageModelClient):
@@ -64,5 +63,5 @@ class LlamaClient(LanguageModelClient):
 
     def create_chat_completion(self, messages: list, max_tokens: int):
         response = self.client.create_chat_completion(messages=messages, temperature=0.0, max_tokens=2)
-        print(response)
+        
         return response
