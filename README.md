@@ -79,7 +79,7 @@ pip install llama-cpp-python  --upgrade --force-reinstall --no-cache-dir
 #### cuBLAS (NVIDIA GPUs)
 For cuBLAS support, ensure CUDA is installed and configured:
 ```bash
-$env:CMAKE_ARGS="-DLLAMA_BLAS=ON -DLLAMA_BLAS_VENDOR=cuBLAS"
+$env:CMAKE_ARGS="-DLLAMA_CUBLAS=on"
 ```
 ```
 pip install llama-cpp-python  --upgrade --force-reinstall --no-cache-dir
