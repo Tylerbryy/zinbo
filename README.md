@@ -12,6 +12,12 @@ Welcome to the Zinbo project.
 ## What is Zinbo?
 
 Zinbo is a powerful tool designed to declutter your Gmail inbox by identifying and filtering out unwanted promotional emails. It leverages advanced language models such as GPT-3, GPT-4, [Llama 2 7B](https://huggingface.co/TheBloke/Llama-2-7B-Chat-GGUF), and [OpenHermes 2.5 Mistral 7B](https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF) to intelligently sort through your messages.
+<div style="text-align: center;">
+	<video width="1920" height="1080" controls>
+		<source src="https://raw.githubusercontent.com/Tylerbryy/zinbo/main/public/@zinbo-demo-4.mp4" type="video/mp4">
+		Your browser does not support the video tag.
+	</video>
+</div>
 
 ## Prerequisites
 
