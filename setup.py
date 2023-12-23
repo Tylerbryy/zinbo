@@ -40,8 +40,8 @@ def update_env(key, new_value):
                     found = True
                 else:
                     f.write(line)
-        if not found:
-            f.write(f"{key}={new_value}\n")
+            if not found:
+                f.write(f"{key}={new_value}\n")
     # Create new .env file
     else:
         with open(env_file_path, "w") as f:

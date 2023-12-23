@@ -26,6 +26,11 @@ def ask_to_override_settings(settings):
     print(Fore.LIGHTYELLOW_EX + "Last used settings found:" + Fore.RESET)
     print()
     for key, value in settings.items():
-        print(Fore.LIGHTYELLOW_EX + f"- {key}: {value}" + Fore.RESET)
+        # Mask the value if it is a string longer than 25 characters
+        if isinstance(value, str) and len(value) > 25:
+            masked_value = '*' * (len(value) - 15) + value[-15:]
+        else:
+            masked_value = value
+        print(Fore.LIGHTYELLOW_EX + f"- {key}: {masked_value}" + Fore.RESET)
     choice = input(Fore.LIGHTYELLOW_EX + "Do you want to use these settings? (yes/no): " + Fore.RESET).strip().lower()
     return choice == 'yes'
